@@ -1,0 +1,87 @@
+Fine Tuning in llms
+
+Introduction:
+•	LLMs as u know it means large language models. Talking about what language models are, it is a type of ai model that understands and responds with  human-like language. 
+•	LLMs use transformers which acts as the core technology between the working. 
+•	Historically, A transformer is a deep learning technique which was mentioned in the paper “Attention is all you need”.
+
+Why transformer?
+•	Transformers are used in sequential processing. The previously used sequential technique like RNNs and LSTMS process text word by word, making it slow whereas transformers supports parallization
+•	If a sentence or text has words that depend on each other but are far apart, RNNs and LSTMs struggle to remember that relationship.
+•	Transformers solve these problem by following “self attention”
+Self Attention :
+•	It is the core mechanism of transformer where weights are given to each word based on its importance. So this makes sures that word that are far away in a sentence can be related
+•	Self attention introduces query, keys, values
+•	Consider an example “john gave diana a book”
+•	Query is the set of questions that the model asks , let us consider the word gave
+1.	Who gave something?
+2.	What was given?
+3.	To whom it was given?
+•	These are the set of questions that are asked under “Query”
+•	Keys describe the role. It gives basic description of the words mentioned
+•	“John”: I am the person who did the action
+•	Diana: I am the person to whom the action is done to
+•	Book”: I am the thing involved in the action.
+
+•	Now the query considers each keys and check which is relevant. Once the key is selected, its corresponding value is considered
+•	Values provide the actual information about the words
+•	“John”(value): John is the giver
+•	“Mary”(value): Mary is the receiver
+•	“book”(value):”A book is the object
+In simple the gave checks the each key. Since the word gave is related to john and book more it gets more weight, diana gets medium weight
+Components of LLMs:
+ 
+
+1.	Input embedding
+•	Transformers do not accept text direcly so it is converted into a matrix
+•	Let us go through an example with steps
+“I love cats”
+Step1: Tokenization
+•	As the name suggests the text is converted into pieces called tokens.
+•	[“I”,”love”,”cats”]
+
+Step2: Embedding loopkup
+•	The model creates an embedded matrix for each word which has a vector of numbers.
+•	For example with dimension 4
+•	"I" → [0.12, 0.34, 0.56, 0.78]
+•	"love" → [0.45, 0.67, 0.89, 0.12]
+•	"cats" → [0.78, 0.56, 0.34, 0.12]
+•	Now your sentence becomes:
+•	[[0.12, 0.34, 0.56, 0.78], [0.45, 0.67, 0.89, 0.12], [0.78, 0.56, 0.34, 0.12]]
+Why embedding?
+•	By converting text into vector, embedding makes sures that two words that are closely related have closer vector. 
+•	With this we can understand the relationship between two words
+•	Suppose you use Word2Vec or GloVe, two popular pre-trained embedding models:
+•	"king" → [0.2, 0.5, 0.8, 1.2]
+•	"queen" → [0.19, 0.51, 0.79, 1.21]
+•	Notice how "king" and "queen" have similar embeddings because they share a related meaning.
+2.	Positional embedding:
+•	Now while giving input, order matters. 
+•	“I love cats” is different from “cats love I”
+•	So address this issue, we use positional encoding of each word to know its sequence
+•	To compute positional index the following formula is used
+
+ 
+Example
+ 
+3.	Encoder:
+•	Encoder does the brainy part where it process the input to understand the context.
+•	It uses self attention and feedforward to accomplish the task
+•	The output of encoder contains the updated matrix which contains the contextual meaning of the input sentence
+•	It understands “I” is the person doing the action, “love” is the verb and “cats” is the person being loved
+   4 .shifted output:
+•	The aim of this shifted output is to train the model to predict the next token
+•	Lets say the input it “ I have a phone”
+•	First it is tokenized: [“I’,’have”,”a”,”phone”]
+•	Expected output will be [“have”,”a”,”phone”,”<END>”]
+•	This shifted output is used only in the cases of finding the next word. This is used only in “auto regressive tasks”(task that involve finding the next word)
+•	It is not used in the non autoregressive tasks(classification or prediction)
+
+4.	Output Embeddings:
+•	Decoder is responsible for producing the output
+•	It may use the output of encoder to understand the context and give out relatable output
+•	The decoder doesn’t know the whole output in advanced. It generates one word at a time
+•	It considers what it has already taken, the encoders context, rules of the converting language
+•	The input of decoder can be 1. Output of encoder 2. Shifted op embeddings
+
+
